@@ -1,0 +1,27 @@
+{
+  "name": "@AndreSteenveld/jsonapi-serializer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./bin/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "LGPL-3.0",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "core-js": "^2.5.7",
+    "inflection": "^1.12.0",
+    "json8-patch": "^0.4.1",
+    "jsonpath": "^1.0.0",
+    "transformalizer": "^1.1.2",
+    "uri-templates": "^0.2.0",
+    "urijs": "^1.19.1"
+  }
+}
