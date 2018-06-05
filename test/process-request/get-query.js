@@ -27,9 +27,9 @@ const context = {
         } 
     
     }
-}
+};
 
-test( "build_sort", output_equals, defaults :: build_sort, [{ }], {
+test( "build_sort", output_equals, defaults :: build_sort, [ context ], {
 
     neutral   : true,
     accending : true,

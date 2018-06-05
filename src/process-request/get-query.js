@@ -1,28 +1,32 @@
 import $ from "core-js/library";
-import uri_template from "urijs";
+import URI from "urijs";
+import uri_template from "uri-templates";
 
 import { get, empty, flatten, to_object } from "../utilities";
 
+function expand_url( url, template = this ){
+
+    const uri = new URI( url );
+
+    return uri_template( template ).fromUri( `${ uri.path( ) }/${ uri.search( ) }` );
+
+}
+
 export function build_sort( context ){
     
-    const { sort = "" } = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
+    const { sort = "" } = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) ); 
     
     return sort
         .split( "," )
-        .map( ( path ) =>
+        .map( ( path ) => {
         
-            ( /(-|+)/ ).test( path[ 0 ] ) 
+            return ( /([-+])/ ).test( path[ 0 ] ) 
                 ? `${ path }`
                 : `+${ path }`
         
-        )
-        .map( ( path ) => {
-            
-            return "-" === path[ 0 ]
-                ? [ path.slice( 1 ), false ]
-                : [ path.slice( 0 ), true ];
-            
-        });
+        })
+        .map( ( path ) => [ path.slice( 1 ), "+" === path[ 0 ] ] )
+        .reduce( to_object, empty( ) );
         
 }
 
@@ -30,7 +34,7 @@ export function build_fields( context ){
     
     const
         regex = ( /^fields\[.*\]$/ ), 
-        paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
+        paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) );
     
     return $.Object
         .entries( paramaters )
@@ -53,7 +57,7 @@ export function build_match( context ){
     
     const 
         regex = ( /^filter\[(.*)\]/ ),    
-        paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
+        paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) );
     
     return $.Object
         .entries( paramaters )
@@ -72,7 +76,7 @@ export function build_match( context ){
 export function build_limit_and_offset( context ){
     
     const 
-        paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) ),
+        paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) ),
         
         limit  = paramaters :: get( "/page[limit]", this.default.limit ),
         offset = paramaters :: get( "/page[offset]", 0 );
