@@ -6,9 +6,13 @@ import { get, empty, flatten, to_object } from "../utilities";
 
 function expand_url( url, template = this ){
 
-    const uri = new URI( url );
+    const 
+        uri = new URI( url ).escapeQuerySpace( false ),
+        encoded_paramaters = uri_template( template ).fromUri( `${ uri.path( ) }/${ uri.search( ) }` );
 
-    return uri_template( template ).fromUri( `${ uri.path( ) }/${ uri.search( ) }` );
+    return $.Object.entries( encoded_paramaters )
+        .map( ([ key, value ]) => [ URI.decode( key ), URI.decode( value ) ])
+        .reduce( to_object, empty( ) );
 
 }
 
@@ -33,7 +37,7 @@ export function build_sort( context ){
 export function build_fields( context ){
     
     const
-        regex = ( /^fields\[.*\]$/ ), 
+        regex = ( /^fields(\[(.*)\]){0,1}$/ ), 
         paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) );
     
     return $.Object
@@ -41,11 +45,11 @@ export function build_fields( context ){
         .filter( ([ key ]) => regex.test( key ) )
         .map( ([ key, fields ]) => {
             
-            const [ , root = "/" ] = regex.exec( key );
+            const [ , , root = "/" ] = regex.exec( key );
             
             return fields
                 .split( "," )
-                .map( ( field ) => [ `${ root }/${ field }`, true ] );
+                .map( ( field ) => [ `${ root }/${ field }`.replace( /\/{2}/g, "/" ), true ] );
                 
         })
         .reduce( flatten, [ ] )
@@ -56,15 +60,15 @@ export function build_fields( context ){
 export function build_match( context ){
     
     const 
-        regex = ( /^filter\[(.*)\]/ ),    
+        regex = ( /^filter(\[(.*)\]){0,1}$/ ),
         paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) );
-    
+
     return $.Object
         .entries( paramaters )
         .filter( ([ key ]) => regex.test( key ) )
         .map( ([ key, query ]) => {
-            
-            const [ , root = "/" ] = regex.exec( key )
+
+            const [ , , root = "/" ] = regex.exec( key );
             
             return [ root, query ]
             
@@ -77,9 +81,9 @@ export function build_limit_and_offset( context ){
     
     const 
         paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) ),
-        
-        limit  = paramaters :: get( "/page[limit]", this.default.limit ),
-        offset = paramaters :: get( "/page[offset]", 0 );
+
+        limit  = parseInt( paramaters :: get( "/page[limit]", this.default.limit ), 10 ),
+        offset = parseInt( paramaters :: get( "/page[offset]", 0 ), 10 );
     
     return { limit, offset };
     

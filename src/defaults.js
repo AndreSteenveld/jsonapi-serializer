@@ -52,7 +52,9 @@ export default {
     
     fortune,
     
-    limit : 50
+    default: {
+        limit  : 50,
+    }
 
     
 };
