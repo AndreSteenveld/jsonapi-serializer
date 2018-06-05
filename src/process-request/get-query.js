@@ -3,7 +3,7 @@ import uri_template from "urijs";
 
 import { get, empty, flatten, to_object } from "../utilities";
 
-function build_sort( serializer, context ){
+function build_sort( context ){
     
     const { sort = "" } = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
     
@@ -19,16 +19,18 @@ function build_sort( serializer, context ){
         
 }
 
-function build_fields( serializer, context ){
+function build_fields( context ){
     
-    const paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
+    const
+        regex = ( /^fields\[.*\]$/ ), 
+        paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
     
     return $.Object
         .entries( paramaters )
-        .filter( ([ key ]) => key.startsWith( "fields" ) )
+        .filter( ([ key ]) => regex.test( key ) )
         .map( ([ key, fields ]) => {
             
-            const [ , root = "/" ] = ( /^fields\[(.*)\]$/ ).exec( key );
+            const [ , root = "/" ] = regex.exec( key );
             
             return fields
                 .split( "," )
@@ -40,16 +42,18 @@ function build_fields( serializer, context ){
     
 }
 
-function build_match( serializer, context ){
+function build_match( context ){
     
-    const paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
+    const 
+        regex = ( /^filter\[(.*)\]/ ),    
+        paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
     
     return $.Object
         .entries( paramaters )
-        .filter( ([ key ]) => key.startsWith( "filter" ) )
+        .filter( ([ key ]) => regex.test( key ) )
         .map( ([ key, query ]) => {
             
-            const [ , root = "/" ] = ( /^filter\[(.*)\]$/ ).exec( key )
+            const [ , root = "/" ] = regex.exec( key )
             
             return [ root, query ]
             
@@ -58,7 +62,7 @@ function build_match( serializer, context ){
     
 }
 
-function build_limit_and_offset( serializer, context ){
+function build_limit_and_offset( context ){
     
     const 
         paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) ),
@@ -73,11 +77,11 @@ function build_limit_and_offset( serializer, context ){
 export function get_query( serializer, context ){
     
     const
-        sort   = build_sort.call( this, serializer, context ),
-        fields = build_fields.call( this, serializer, context ),
-        match  = build_match.call( this, serializer, context ),
+        sort   = build_sort.call( this, context ),
+        fields = build_fields.call( this, context ),
+        match  = build_match.call( this, context ),
         
-        { limit, offset } = build_limit_and_offset.call( this, serializer, context );
+        { limit, offset } = build_limit_and_offset.call( this, context );
         
     return Object.assign(
         
