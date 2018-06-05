@@ -3,12 +3,19 @@ import uri_template from "urijs";
 
 import { get, empty, flatten, to_object } from "../utilities";
 
-function build_sort( context ){
+export function build_sort( context ){
     
     const { sort = "" } = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) );
     
     return sort
         .split( "," )
+        .map( ( path ) =>
+        
+            ( /(-|+)/ ).test( path[ 0 ] ) 
+                ? `${ path }`
+                : `+${ path }`
+        
+        )
         .map( ( path ) => {
             
             return "-" === path[ 0 ]
@@ -19,7 +26,7 @@ function build_sort( context ){
         
 }
 
-function build_fields( context ){
+export function build_fields( context ){
     
     const
         regex = ( /^fields\[.*\]$/ ), 
@@ -42,7 +49,7 @@ function build_fields( context ){
     
 }
 
-function build_match( context ){
+export function build_match( context ){
     
     const 
         regex = ( /^filter\[(.*)\]/ ),    
@@ -62,7 +69,7 @@ function build_match( context ){
     
 }
 
-function build_limit_and_offset( context ){
+export function build_limit_and_offset( context ){
     
     const 
         paramaters = uri_template( this.fortune.uri_template ).fromUri( context :: get( this.fortune.context_request_url ) ),
