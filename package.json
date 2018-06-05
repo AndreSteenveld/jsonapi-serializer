@@ -4,21 +4,28 @@
   "description": "",
   "main": "./bin/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "env NODE_ENV='test' nyc ava"
   },
   "ava": {
     "require": "babel-register",
-    "babel": "inherit"
+    "babel": {
+      "extends": "./.babelrc",
+      "plugins": [
+        "istanbul"
+      ]
+    }
   },
   "author": "Andre Steenveld <andre.steenveld@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
     "ava": "^0.25.0",
     "babel-cli": "^6.26.0",
+    "babel-plugin-istanbul": "^4.1.6",
     "babel-plugin-transform-export-extensions": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
-    "babel-register": "^6.26.0"
+    "babel-register": "^6.26.0",
+    "nyc": "^12.0.2"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
