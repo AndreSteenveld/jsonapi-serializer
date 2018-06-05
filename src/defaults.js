@@ -1,7 +1,7 @@
 
 export const fortune = {
     
-    uri_template : "{*}/{?}",
+    uri_template : "{/type,id,related_field,relationship}{?sort,page,fields,filter}",
     
     context_type    : "/type",
     context_result  : "/result",
