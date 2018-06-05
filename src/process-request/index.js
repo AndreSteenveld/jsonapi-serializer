@@ -4,8 +4,9 @@ import uri_template from "urijs";
 import defaults from "../defaults";
 import get_query from "./get-query";
 
+export { get_query } from "./get-query";
 
-function get_type( serializer, context ){
+export function get_type( serializer, context ){
 
     const { type = null } = uri_template( this.fortune.uri_template ).fromUri( context.meta.request.url );
     
@@ -13,13 +14,13 @@ function get_type( serializer, context ){
     
 }
 
-function get_ids( serializer, context ){
+export function get_ids( serializer, context ){
     
     return null;
     
 }
 
-function get_meta( serializer, context ){
+export function get_meta( serializer, context ){
     
     return Object.create( null );
     
