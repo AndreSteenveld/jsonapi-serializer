@@ -1,17 +1,34 @@
+import $ from "core-js/library";
 import Promise from "bluebird";
-import uri_template from "urijs";
+import URI from "urijs";
+import uri_template from "uri-templates";
 
+import { get, to_object, empty } from "../utilities";
 import defaults from "../defaults";
 import get_query from "./get-query";
 
 export { get_query } from "./get-query";
 
+export function unpack( template, url = this ){
+
+    const 
+        uri = new URI( url ).escapeQuerySpace( false ),
+        encoded_paramaters = uri_template( template ).fromUri( `${ uri.path( ) }/${ uri.search( ) }` );
+
+    return $.Object.entries( encoded_paramaters )
+        .map( ([ key, value ]) => [ URI.decode( key ), URI.decode( value ) ])
+        .reduce( to_object, empty( ) );
+
+}
+
 export function get_type( serializer, context ){
 
-    const { type = null } = uri_template( this.fortune.uri_template ).fromUri( context.meta.request.url );
+    const { type = "" } = context 
+        :: get( this.fortune.context_request_url ) 
+        :: unpack( this.fortune.uri_template );
     
-    return type;
-    
+    return type; 
+
 }
 
 export function get_ids( serializer, context ){

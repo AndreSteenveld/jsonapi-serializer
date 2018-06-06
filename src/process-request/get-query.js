@@ -2,24 +2,15 @@ import $ from "core-js/library";
 import URI from "urijs";
 import uri_template from "uri-templates";
 
+import { unpack } from ".";
 import { get, empty, flatten, to_object } from "../utilities";
-
-function expand_url( url, template = this ){
-
-    const 
-        uri = new URI( url ).escapeQuerySpace( false ),
-        encoded_paramaters = uri_template( template ).fromUri( `${ uri.path( ) }/${ uri.search( ) }` );
-
-    return $.Object.entries( encoded_paramaters )
-        .map( ([ key, value ]) => [ URI.decode( key ), URI.decode( value ) ])
-        .reduce( to_object, empty( ) );
-
-}
 
 export function build_sort( context ){
     
-    const { sort = "" } = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) ); 
-    
+    const { sort = "" } = context
+        :: get( this.fortune.context_request_url )
+        :: unpack( this.fortune.uri_template );
+        
     return sort
         .split( "," )
         .map( ( path ) => {
@@ -38,7 +29,9 @@ export function build_fields( context ){
     
     const
         regex = ( /^fields(\[(.*)\]){0,1}$/ ), 
-        paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) );
+        paramaters = context
+            :: get( this.fortune.context_request_url )
+            :: unpack( this.fortune.uri_template ); 
     
     return $.Object
         .entries( paramaters )
@@ -61,7 +54,9 @@ export function build_match( context ){
     
     const 
         regex = ( /^filter(\[(.*)\]){0,1}$/ ),
-        paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) );
+        paramaters = context
+            :: get( this.fortune.context_request_url )
+            :: unpack( this.fortune.uri_template );  
 
     return $.Object
         .entries( paramaters )
@@ -80,7 +75,9 @@ export function build_match( context ){
 export function build_limit_and_offset( context ){
     
     const 
-        paramaters = this.fortune.uri_template :: expand_url( context :: get( this.fortune.context_request_url ) ),
+        paramaters = context
+            :: get( this.fortune.context_request_url )
+            :: unpack( this.fortune.uri_template ),
 
         limit  = parseInt( paramaters :: get( "/page[limit]", this.default.limit ), 10 ),
         offset = parseInt( paramaters :: get( "/page[offset]", 0 ), 10 );
