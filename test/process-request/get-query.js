@@ -1,43 +1,10 @@
-import URI from "urijs";
 import test from "ava";
+
+import { output_equals, context } from "./_helpers";
+
 import defaults from "../../src/defaults";
 import { build_sort, build_fields, build_match, build_limit_and_offset } from "../../src/process-request/get-query";
 
-function output_equals( assert, value_func, $args, expected ){
-
-    return assert.deepEqual( value_func( ...$args ), expected );
-
-}
-
-const url = ( new URI( ) )
-    .escapeQuerySpace( false )
-    .protocol( "http" )
-    .host( "example.localhost" )
-    .directory( "type" )
-    .query({
-        
-        "sort" : "+accending,neutral,-decending",
-        
-        "page[limit]"  : 10,
-        "page[offset]" : 5,
-
-        "fields": "first,second,third",
-        "fields[/nested]": "forth,fith,sixth",
-
-        "filter": "$.value < 10",
-        "filter[/nested]": "$.thing == 'string'",
-        "filter[/nested/property]" : "$ == ( 10 + 1 )"
-
-    })
-    .toString( );
-
-const context = {
-    meta : { 
-        
-        request : { url } 
-    
-    }
-};
 
 test( `build_sort( ... )`, output_equals, defaults :: build_sort, [ context ], {
 
@@ -71,7 +38,6 @@ test( `build_limit_and_offset( ... )`, output_equals, defaults :: build_limit_an
 
     limit : 10,
     offset : 5
-
 });
 
 
