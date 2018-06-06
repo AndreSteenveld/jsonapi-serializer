@@ -16,6 +16,12 @@ export function get( path, default_value ){
     
 }
 
+export function property( key, default_value ){
+
+    return key in this ? this[ key ] : default_value;
+
+}
+
 export function empty( ){
 
     return Object.create( null );
@@ -34,14 +40,15 @@ export function to_object( target, [ key, value ] ){
 
 }
 
-export function truthy( v ){
+export function truthy( v = this ){
 
     return true === !!v;
 
 }
 
-export function falsey( v ){
+export function falsey( v = this ){
 
     return false === !!v;
 
 }
+
