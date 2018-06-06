@@ -4,7 +4,8 @@
   "description": "",
   "main": "./bin/index.js",
   "scripts": {
-    "test": "env NODE_ENV='test' nyc ava"
+    "test": "env NODE_ENV=test ava",
+    "test:coverage": "env NODE_ENV=test nyc npm test" 
   },
   "ava": {
     "require": "babel-register",
