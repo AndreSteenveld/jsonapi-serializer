@@ -1,7 +1,6 @@
 import $ from "core-js/library";
 import { truthy, falsey } from "../utilities";
 
-
 function is_array_or_string( value = this ){
 
     return $.Array.isArray( value ) || "string" === typeof value

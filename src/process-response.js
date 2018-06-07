@@ -1,7 +1,7 @@
 import Promise from "bluebird";
 import oo_patch from "json8-patch";
 
-import { get } from "../utilities";
+import { get } from "./utilities";
 import defaults from "./defaults";
 
 export function process_response( serializer, context, request, response ){

@@ -1,6 +1,7 @@
 import $ from "core-js/library";
 import create_transformer from "transformalizer";
-import { to_object, empty, property } from "./utilities";
+
+import Schema from "./schema";
 
 export const path = Object.freeze({
 
@@ -8,7 +9,7 @@ export const path = Object.freeze({
 
 });
 
-export function schema_to_ransformer( options, fortune_schema = this ){
+export function schema_to_transformer( options, fortune_schema = this ){
 
     const transformer = create_transformer( );
 

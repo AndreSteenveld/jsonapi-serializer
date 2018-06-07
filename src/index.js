@@ -7,7 +7,7 @@ import transform from "./schema-to-transformer";
 
 export { default as defaults } from "./defaults";
 
-export process_request, process_response, parse_payload;
+export { process_request, process_response, parse_payload };
 
 export default ( Serializer ) => class extends Serializer {
     
@@ -19,7 +19,7 @@ export default ( Serializer ) => class extends Serializer {
         
         super( ...$args );  
         
-        this.tranformer = this.schema :: transform({ });
+        this.tranformer = this.options.schema :: transform({ });
         
     }
     
