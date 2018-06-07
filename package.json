@@ -1,12 +1,12 @@
 {
-  "name": "@AndreSteenveld/jsonapi-serializer",
+  "name": "@andresteenveld/jsonapi-serializer",
   "version": "1.0.0",
   "description": "",
   "main": "./bin/index.js",
   "scripts": {
     "test": "env NODE_ENV=test ava",
     "test:coverage": "env NODE_ENV=test nyc npm test",
-    "test:debug": "env NODE_ENV=test node --inspect --inspect-brk node_modules/ava/profile.js" 
+    "test:debug": "env NODE_ENV=test node --inspect --inspect-brk node_modules/ava/profile.js"
   },
   "ava": {
     "require": "babel-register",
@@ -35,7 +35,7 @@
     "inflection": "^1.12.0",
     "json8-patch": "^0.4.1",
     "jsonpath": "^1.0.0",
-    "transformalizer": "^1.1.2",
+    "transformalizer": "AndreSteenveld/transformalizer#semver:1.1.3",
     "uri-templates": "^0.2.0",
     "urijs": "^1.19.1"
   }
